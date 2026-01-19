@@ -1,2 +1,4 @@
 # MythicAC
-Luainterpreters minimal anticheat shell for PoC for MC Leveling.
+Luainterpreters minimal anticheat shell, PoC for MC Leveling.
+
+Pls hire me :) 
