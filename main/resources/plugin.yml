@@ -1,0 +1,25 @@
+name: MythicAntiCheat
+version: '1.0.0'
+main: com.mythicac.MythicAntiCheat
+api-version: '1.21'
+description: Server-side anti-cheat with MythicMobs compatibility
+author: Luainterpreter
+softdepend:
+  - MythicMobs
+  - MMOItems
+  - ProtocolLib
+commands:
+  mythicac:
+    description: MythicAntiCheat admin commands
+    usage: /<command> [reload|debug|status]
+    permission: mythicac.admin
+permissions:
+  mythicac.admin:
+    description: Access to admin commands
+    default: op
+  mythicac.alerts:
+    description: Receive anti-cheat alerts
+    default: op
+  mythicac.bypass:
+    description: Bypass all checks
+    default: false

@@ -1,0 +1,108 @@
+general:
+  log_only_mode: false
+  debug: false
+  check_interval_ticks: 1
+
+checks:
+  movement:
+    enabled: true
+    debug: true
+    max_horizontal_speed: 0.4
+    max_vertical_speed: 3.92
+    suspicion_increment: 10.0
+    suspicion_decay: 0.98
+    alert_threshold: 50.0
+    
+  rotation:
+    enabled: true
+    debug: true
+    max_yaw_change: 180.0
+    max_pitch_change: 90.0
+    snap_threshold_degrees: 120.0
+    snap_time_ms: 50
+    suspicion_increment: 8.0
+    suspicion_decay: 0.97
+    alert_threshold: 60.0
+    require_movement_correlation: true
+
+exemptions:
+  teleport_ticks: 43
+  velocity_ticks: 23
+  max_velocity_ticks: 40
+  rotation_ticks: 30
+  high_ping_threshold: 200
+  high_ping_extra_ticks: 10
+
+lag_compensation:
+  enabled: true
+  moderate_tps: 18.0
+  heavy_tps: 15.0
+  severe_tps: 10.0
+  moderate_multiplier: 1.3
+  heavy_multiplier: 1.6
+  severe_multiplier: 2.0
+
+mythicmobs:
+  enabled: true
+  debug: false
+  rotation_exempt_skills:
+    - "spin"
+    - "gaze"
+    - "stun"
+    - "forcedlook"
+    - "lookat"
+    - "disorient"
+  movement_exempt_skills:
+    - "pull"
+    - "launch"
+    - "lunge"
+    - "leap"
+    - "dash"
+    - "charge"
+  teleport_exempt_skills:
+    - "teleport"
+    - "teleporttotarget"
+    - "swap"
+    - "blink"
+  skill_durations:
+    spin: 40
+    pull: 80
+    launch: 100
+    teleport: 40
+
+mmoitems:
+  enabled: true
+  debug: true
+  damage_exempt_ticks: 20
+  knockback_exempt_ticks: 30
+  default_ability_ticks: 10
+  ability_durations:
+    DASH: 10
+    LEAP: 15
+    BLINK: 5
+    WARP: 5
+    SHADOW_WALK: 160
+    BLADE_SLASH: 5
+    BLADE_DANCE: 20
+    DAGGER_THROW: 5
+    TELEPORT: 5
+    LUNGE: 15
+    CHARGE: 20
+
+protocollib:
+  enabled: true
+  debug: false
+  track_attack_packets: true
+  track_use_packets: true
+
+logging:
+  file_logging: true
+  max_log_files: 10
+  timestamps: true
+  log_exemptions: true  
+  min_log_suspicion: 15.0
+
+alerts:
+  notify_staff: true
+  alert_cooldown_seconds: 10
+  detailed_alerts: true
