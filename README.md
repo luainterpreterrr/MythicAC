@@ -1,180 +1,96 @@
-MythicAC : Context-Aware Movement & Rotation Anti-Cheat (PoC)
+# MythicAC
+### Context-Aware Movement & Rotation Anti-Cheat (PoC)
 
-MythicAC is a proof-of-concept Minecraft anti-cheat plugin focused on movement and rotation anomaly detection while correctly handling server-induced mechanics (e.g. MythicMobs skills).
-The project demonstrates how to detect cheat-like behavior without false positives caused by scripted server actions.
+Lightweight **proof-of-concept Minecraft anti-cheat** focused on detecting **movement and rotation anomalies** while correctly handling **server-induced mechanics** (e.g. MythicMobs skills).
 
-This PoC prioritizes clean architecture, attribution, and correctness over a large rule set.
+Designed to demonstrate **false-positive reduction via context awareness**, not a full production rule set.
 
-Problem Statement
+---
 
-Traditional movement and rotation checks assume that player input is the sole source of motion and camera changes.
-In practice, advanced servers frequently apply:
+## Problem
+Many anti-cheats assume player input is the only source of movement and rotation.
 
-Forced rotations
+In practice, servers apply:
+- Forced rotations
+- Scripted velocity (pulls, knockback, dashes)
+- Teleports and target-locking mechanics
 
-Scripted velocity (pulls, knockback, dashes)
+These produce cheat-like patterns and lead to:
+- False positives
+- Over-exempted checks
+- Reduced detection accuracy
 
-Teleports and target-locking mechanics
+---
 
-These actions produce patterns that resemble cheating, leading to:
+## Approach
+MythicAC focuses on **attribution**, not blanket exemptions.
 
-False positives
+- Track per-player movement & rotation deltas
+- Detect abnormal patterns
+- Apply **short, scoped exemptions** when server mechanics are active
+- Preserve detection outside exemption windows
 
-Over-exempted checks
+Detection and exemptions are **decoupled** to avoid blind spots.
 
-Poor player experience
+---
 
-MythicAC addresses this by introducing context-aware detection rather than loosening checks globally.
+## Structure
+- check/ Base check + movement & rotation checks
+- data/ Per-player state tracking
+- hook/ MythicMobs, MMOItems, ProtocolLib context
+- listener/ Player movement & rotation capture
+- manager/ Check routing, exemptions, player tracking
+- util/ Shared helpers
 
-Core Approach
+---
 
-MythicAC is built around attribution:
+## Checks
+- **MovementCheck**
+  - Velocity & positional anomalies
+  - Invalid acceleration patterns
+- **RotationCheck**
+  - Unnatural yaw/pitch deltas
+  - Non-human rotation behavior
 
-Track per-player movement and rotation state
+---
 
-Detect abnormal deltas and patterns
+## Exemptions
+Exemptions are applied only when required.
 
-Apply exemptions when server mechanics are responsible
+Examples:
+- Server-forced rotation → exempted
+- Scripted knockback → tracked, not flagged
+- Anomalies outside context → detected normally
 
-Log and score anomalies instead of immediately enforcing
+This prevents cheats from hiding behind server mechanics.
 
-This mirrors real-world anti-cheat design at scale: telemetry and classification first, enforcement second.
+---
 
-Architecture Overview
-Plugin Entry
+## Hooks
+- **MythicMobs** – scripted mechanics context
+- **MMOItems** – item-based abilities
+- **ProtocolLib** – packet-level movement & rotation data
 
-MythicAntiCheat.java
-Initializes managers, listeners, and external hooks.
+---
 
-Checks
+## Running
+1. Paper / Spigot server  
+2. Install:
+   - MythicMobs
+   - ProtocolLib (recommended)
+   - MythicAC
+3. Trigger MythicMobs skills affecting movement or rotation
+4. Observe detection & exemption behavior via logs
 
-check/Check.java
-Base abstraction for all checks.
+---
 
-check/MovementCheck.java
-Detects invalid movement patterns, velocity changes, and positional anomalies.
+## Purpose
+This project demonstrates:
+- Context-aware anti-cheat design
+- False-positive reduction without weakening detection
+- Clean, extensible architecture suitable for large servers
 
-check/RotationCheck.java
-Detects unrealistic yaw/pitch deltas and rotation behavior inconsistent with normal player input.
+---
 
-Player State
-
-data/PlayerData.java
-Maintains per-player state including:
-
-last known movement & rotation
-
-recent deltas
-
-tick timing
-
-exemption flags
-
-Managers
-
-manager/CheckManager.java
-Registers and executes checks for each player update.
-
-manager/PlayerTracker.java
-Handles player lifecycle and state updates.
-
-manager/ExemptionManager.java
-Determines when checks should be ignored or reduced due to server-induced effects.
-
-Event Handling
-
-listener/PlayerListener.java
-Captures player movement and rotation events and feeds them into the detection pipeline.
-
-Context Hooks
-
-hook/ProtocolLibHook.java
-Provides accurate packet-level movement and rotation data.
-
-hook/MythicMobsHook.java
-Creates exemption windows for MythicMobs-driven mechanics.
-
-hook/MMOItemsHook.java
-Handles item-based abilities that may cause abnormal motion or rotation.
-
-Utilities
-
-util/*
-Shared helpers for math, timing, thresholds, and common logic.
-
-Exemption & Detection Logic
-
-Instead of globally disabling checks, MythicAC applies short, controlled exemption windows when server mechanics are active.
-
-During these windows:
-
-Checks may be skipped
-
-Thresholds may be relaxed
-
-Confidence scores may be reduced
-
-Outside of these windows, full detection logic remains active.
-
-This prevents cheats from hiding behind server mechanics while eliminating false positives.
-
-What This PoC Demonstrates
-
-Context-aware movement and rotation detection
-
-False-positive reduction without creating blind spots
-
-Clean separation between:
-
-tracking
-
-detection
-
-exemptions
-
-Extensible structure suitable for large-scale servers
-
-Practical anti-cheat engineering rather than heuristic spam
-
-Typical Scenarios
-
-Forced MythicMobs rotation → detected but exempted
-
-Scripted knockback → tracked without flagging
-
-Unnatural rotation outside exemptions → flagged
-
-Repeated anomalies over time → escalated confidence
-
-Running the PoC
-
-Run a Paper/Spigot server
-
-Install:
-
-MythicMobs
-
-ProtocolLib (recommended)
-
-MythicAC
-
-Trigger MythicMobs skills that affect movement or rotation
-
-Observe detection and exemption behavior via logs
-
-Relevance
-
-This project reflects real challenges faced by large Minecraft networks:
-
-custom gameplay systems
-
-complex player movement
-
-maintaining detection accuracy at scale
-
-It demonstrates an engineering approach aligned with modern anti-cheat design: context-aware, explainable, and extensible.
-
-Disclaimer
-
-This project is a research and educational proof-of-concept.
-It is not intended to bypass anti-cheats or facilitate cheating.
+## Disclaimer
+Research and educational proof-of-concept only.
